@@ -693,12 +693,9 @@ function setBed(room, date, config, btn){
   // Re-render
   renderDay();
   
-  // Save to server
-  fetch(API_URL, {
-    method:'POST',
-    headers:{'Content-Type':'text/plain'},
-    body:JSON.stringify({action:'saveBedConfig', room:room.toString(), date:date, config:config})
-  }).catch(function(e){console.log('Save error:',e);});
+  // Save to server via GET (avoids CORS issues)
+  var url=API_URL+'?saveBed=1&room='+encodeURIComponent(room)+'&date='+encodeURIComponent(date)+'&config='+encodeURIComponent(config);
+  fetch(url, {mode:'no-cors'}).catch(function(e){console.log('Save error:',e);});
 }
 // Call after render and on window resize
 window.addEventListener('resize', resizeFrame);
