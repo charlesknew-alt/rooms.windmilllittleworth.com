@@ -634,7 +634,8 @@ function renderHK(){
   document.getElementById('hkList').innerHTML=h;
 }
 
-// Recent Bookings
+// Recent Bookings — only shows bookings with a genuine creation date (bookedAt)
+// Excludes rows where bookedAt is empty (old data without created_utc)
 function renderRecent(){
   if(!D||!D.rooms)return;
   var all=[];
@@ -642,9 +643,11 @@ function renderRecent(){
     var rm=D.rooms[i];
     for(var b=0;b<(rm.bookings||[]).length;b++){
       var bk=rm.bookings[b];
+      // Only include bookings with a genuine creation date
+      if(!bk.bookedAt)continue;
       var rate='';
       if(rm.nightRates&&rm.nightRates[bk.checkin])rate='\u00A3'+rm.nightRates[bk.checkin].toFixed(0);
-      all.push({room:rm.room, guest:bk.guest, checkin:bk.checkin, checkout:bk.checkout, rate:rate, bookedAt:bk.bookedAt||''});
+      all.push({room:rm.room, guest:bk.guest, checkin:bk.checkin, checkout:bk.checkout, rate:rate, bookedAt:bk.bookedAt});
     }
   }
   // Sort by booking creation date (most recently booked first)
